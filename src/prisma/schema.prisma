@@ -16,12 +16,14 @@ model User {
 }
 
 model Streams {
-  id      String    @id @default(uuid())
-  type    StremType
-  active  Boolean   @default(true)
-  userId  String
-  user    User      @relation(fields: [userId], references: [id])
-  Upvotes Upvotes[]
+  id          String    @id @default(uuid())
+  type        StremType
+  url         String
+  extractedId String
+  active      Boolean   @default(true)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  Upvotes     Upvotes[]
 }
 
 model Upvotes {
