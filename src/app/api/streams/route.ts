@@ -4,7 +4,7 @@ import { z } from "zod";
 
 const YT_REGEX = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
 
-const CreateStreamSchema = z.object({
+export const CreateStreamSchema = z.object({
     createrId: z.string(),
     url: z.string().regex(YT_REGEX, "Invalid YouTube URL")
 });
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ message: "Wrong URL format" }, { status: 411 });
         }
 
-        const extractedId = match[1]; 
+        const extractedId = match[1];
 
         await prismaClient.streams.create({
             data: {
@@ -34,4 +34,17 @@ export async function POST(req: NextRequest) {
     } catch (e) {
         return NextResponse.json({ message: `Error while adding a stream: ${e}` }, { status: 500 });
     }
+}
+
+
+export async function GET(req: NextRequest) {
+    const createrId = await req.nextUrl.searchParams.get("createrId")
+    const streams = await prismaClient.streams.findMany({
+        where: {
+            userId: createrId ?? ""
+        }
+    })
+    return NextResponse.json({
+        streams
+    })
 }

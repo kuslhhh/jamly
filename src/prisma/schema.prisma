@@ -9,21 +9,21 @@ datasource db {
 
 model User {
   id       String    @id @default(uuid())
-  email    String
+  email    String    @unique 
   provider Provider
   streams  Streams[]
-  Upvotes  Upvotes[]
+  upvotes  Upvotes[] 
 }
 
 model Streams {
   id          String    @id @default(uuid())
-  type        StremType
-  url         String
+  type        StreamType 
+  url         String    @unique 
   extractedId String
   active      Boolean   @default(true)
   userId      String
   user        User      @relation(fields: [userId], references: [id])
-  Upvotes     Upvotes[]
+  upvotes     Upvotes[]
 }
 
 model Upvotes {
@@ -32,9 +32,11 @@ model Upvotes {
   streamId String
   user     User    @relation(fields: [userId], references: [id])
   stream   Streams @relation(fields: [streamId], references: [id])
+
+  @@unique([userId, streamId])
 }
 
-enum StremType {
+enum StreamType { 
   Spotify
   Youtube
 }
