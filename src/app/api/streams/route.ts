@@ -36,15 +36,19 @@ export async function POST(req: NextRequest) {
     }
 }
 
-
 export async function GET(req: NextRequest) {
-    const createrId = await req.nextUrl.searchParams.get("createrId")
+    const createrId = req.nextUrl.searchParams.get("createrId");
+    if (!createrId) {
+        return NextResponse.json({ message: "createrId is required" }, { status: 400 });
+    }
+
     const streams = await prismaClient.streams.findMany({
         where: {
-            userId: createrId ?? ""
+            userId: createrId
         }
-    })
+    });
+
     return NextResponse.json({
         streams
-    })
+    });
 }
