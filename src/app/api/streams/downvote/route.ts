@@ -1,54 +1,50 @@
+import { prismaClient } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { prismaClient } from "@/lib/db";
 import { z } from "zod";
 
-const DownvoteStreamSchema = z.object({
-  streamId: z.string(),
-});
+const UpvoteSchema = z.object({
+  streamId: z.string()
+})
 
 export async function POST(req: NextRequest) {
-  try {
-    const session = await getServerSession();
 
-    if (!session?.user?.email) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  const session = await getServerSession()
+
+
+  const user = await prismaClient.user.findFirst({
+    where: {
+      email: session?.user?.email ?? ""
     }
+  })
 
-    const user = await prismaClient.user.findUnique({
-      where: { email: session.user.email },
-      select: { id: true },
-    });
 
-    if (!user) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
-    }
-
-    const data = DownvoteStreamSchema.parse(await req.json());
-
-    const existingUpvote = await prismaClient.upvotes.findFirst({
-      where: {
-        userId: user.id, 
-        streamId: data.streamId,
-      },
-    });
-
-    if (!existingUpvote) {
-      return NextResponse.json(
-        { message: "You haven't upvoted this stream yet" },
-        { status: 400 }
-      );
-    }
-
-    await prismaClient.upvotes.delete({
-      where: { id: existingUpvote.id },
-    });
-
-    return NextResponse.json({ message: "Upvote removed (downvoted)" }, { status: 200 });
-  } catch (e) {
-    return NextResponse.json(
-      { message: `Error while downvoting: ${e}` },
-      { status: 500 }
-    );
+  if (!user) {
+    return NextResponse.json({
+      message: "Unauthenticated"
+    }, {
+      status: 403
+    })
   }
+
+  try {
+    const data = UpvoteSchema.parse(await req.json());
+    await prismaClient.upvotes.delete({
+      where: {
+
+        userId_streamId: {
+          userId: user.id,
+          streamId: data.streamId
+        }
+      }
+    })
+
+  } catch (error) {
+    return NextResponse.json({
+      message: "Error while upvoting"
+    }, {
+      status: 403
+    })
+  }
+
 }

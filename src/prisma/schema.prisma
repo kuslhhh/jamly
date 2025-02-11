@@ -18,7 +18,7 @@ model User {
 model Streams {
   id          String    @id @default(uuid())
   type        StreamType 
-  url         String    @unique 
+  url         String    
   extractedId String
   active      Boolean   @default(true)
   userId      String
