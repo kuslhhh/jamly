@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prismaClient } from "@/lib/db"
 import { z } from "zod";
+// @ts-expect-error not have types
+import youtubesearchapi from "youtube-search-api"
+import Logo from "@/components/icons/logo";
 
-const  YT_REGEX = /^(?:(?:https?:)?\/\/)?(?:www\.)?(?:m\.)?(?:youtu(?:be)?\.com\/(?:v\/|embed\/|watch(?:\/|\?v=))|youtu\.be\/)((?:\w|-){11})(?:\S+)?$/;
+
+const YT_REGEX = /^(?:(?:https?:)?\/\/)?(?:www\.)?(?:m\.)?(?:youtu(?:be)?\.com\/(?:v\/|embed\/|watch(?:\/|\?v=))|youtu\.be\/)((?:\w|-){11})(?:\S+)?$/;
 
 
 const CreateStreamSchema = z.object({
@@ -26,6 +30,14 @@ export async function POST(req: NextRequest) {
 
         const extractedId = data.url.split("?v=")[1];
 
+        const res = await youtubesearchapi.GetVideoDetails(extractedId)
+
+        console.log(res.title);
+        console.log(res.thumbnail.thumbnails);
+        const thumbnails = res.thumbnail.thumbnails
+        thumbnails.sort((a: { width: number }, b: { width: number }) => a.width < b.width ? -1 : 1)
+
+
         const stream = await prismaClient.streams.create({
 
             data: {
@@ -33,7 +45,11 @@ export async function POST(req: NextRequest) {
                 userId: data.creatorId,
                 url: data.url,
                 extractedId,
-                type: "Youtube"
+                type: "Youtube",
+                title: res.title ?? "Cant find Video",
+                smallImg: (thumbnails.length > 1 ? thumbnails[thumbnails.length - 2].url : thumbnails[thumbnails.length - 1].url) ?? "https://variety.com/wp-content/uploads/2020/06/youtube-logo.png?w=999&h=562&crop=1",
+                bigImg: thumbnails[thumbnails.length - 1].url ?? "https://variety.com/wp-content/uploads/2020/06/youtube-logo.png?w=999&h=562&crop=1"
+
             }
         })
 
@@ -44,8 +60,7 @@ export async function POST(req: NextRequest) {
 
     } catch (e) {
 
-        console.log(e);
-        
+
         return NextResponse.json({
             message: "Error while adding a stream"
         }, {
