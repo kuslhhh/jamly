@@ -1,9 +1,9 @@
-import Dashboard from "@/components/Dashboard";
+import LandingPage from "@/components/landing";
 
 export default function Home() {
   return (
     <div>
-        <Dashboard />
+      <LandingPage />
     </div>
   );
 }
