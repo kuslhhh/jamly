@@ -48,6 +48,30 @@ const mockSongs: Song[] = [
     duration: "3:45",
     thumbnail: "/placeholder.svg?height=40&width=40",
   },
+  {
+    id: "4",
+    title: "Digital Love",
+    artist: "Virtual Hearts",
+    votes: 23,
+    duration: "3:45",
+    thumbnail: "/placeholder.svg?height=40&width=40",
+  },
+  {
+    id: "4",
+    title: "Digital Love",
+    artist: "Virtual Hearts",
+    votes: 23,
+    duration: "3:45",
+    thumbnail: "/placeholder.svg?height=40&width=40",
+  },
+  {
+    id: "4",
+    title: "Digital Love",
+    artist: "Virtual Hearts",
+    votes: 23,
+    duration: "3:45",
+    thumbnail: "/placeholder.svg?height=40&width=40",
+  },
 ]
 
 export default function StreamsPage() {
@@ -83,7 +107,6 @@ export default function StreamsPage() {
 
   return (
     <div className="h-screen bg-black text-gray-200 flex flex-col">
-      {/* Search Header */}
       <div className="border-b border-emerald-400/10 bg-black/50 backdrop-blur-sm p-2">
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
@@ -104,7 +127,6 @@ export default function StreamsPage() {
       </div>
 
       <div className="flex-1 flex overflow-hidden">
-        {/* Main Player Section */}
         <div className="flex-1 p-4 flex flex-col justify-between">
           <div className="aspect-square relative group w-full max-w-md mx-auto">
             <Image
@@ -142,7 +164,6 @@ export default function StreamsPage() {
               </Button>
             </div>
 
-            {/* Progress & Controls */}
             <div className="space-y-2">
               <div className="h-1 bg-emerald-400/20 rounded-full overflow-hidden">
                 <div
@@ -177,7 +198,6 @@ export default function StreamsPage() {
           </div>
         </div>
 
-        {/* Queue Section */}
         <div className="w-80 border-l border-emerald-400/10 p-4 flex flex-col">
           <h2 className="text-lg font-semibold text-emerald-400 mb-4">Queue (12)</h2>
 
@@ -215,7 +235,6 @@ export default function StreamsPage() {
                     </Button>
                   </div>
                 </div>
-                {/* Progress indicator */}
                 <div className="h-0.5 bg-emerald-400/10">
                   <div className="h-full bg-emerald-400/30" style={{ width: `${Math.random() * 100}%` }} />
                 </div>
@@ -238,7 +257,6 @@ export default function StreamsPage() {
         </div>
       </div>
 
-      {/* Background gradient */}
       <div className="fixed inset-0 -z-10 h-full w-full bg-black">
         <div className="absolute inset-0 bg-gradient-to-t from-emerald-400/10 via-transparent to-transparent opacity-20" />
       </div>

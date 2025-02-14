@@ -3,7 +3,6 @@ import { prismaClient } from "@/lib/db"
 import { z } from "zod";
 // @ts-expect-error not have types
 import youtubesearchapi from "youtube-search-api"
-import Logo from "@/components/icons/logo";
 
 
 const YT_REGEX = /^(?:(?:https?:)?\/\/)?(?:www\.)?(?:m\.)?(?:youtu(?:be)?\.com\/(?:v\/|embed\/|watch(?:\/|\?v=))|youtu\.be\/)((?:\w|-){11})(?:\S+)?$/;
@@ -81,5 +80,4 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
         streams
     })
-
 }
