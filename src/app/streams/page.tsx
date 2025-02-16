@@ -74,6 +74,7 @@ const mockSongs: Song[] = [
   },
 ]
 
+// fix this ui and colours
 export default function StreamsPage() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentSong] = useState<Song>(mockSongs[0])
